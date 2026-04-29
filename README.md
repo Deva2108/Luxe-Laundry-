@@ -33,14 +33,15 @@ LuxeLaundry is a lightweight, aesthetic, and functional Order Management System 
 2. **Order Management**:
    - **Create Order**: Multi-item garment entry, automatic total calculation, and unique Order ID generation.
    - **Status Tracking**: Update status through an intuitive modal (RECEIVED → PROCESSING → READY → DELIVERED).
-   - **Filtering & Search**: Live search by Customer Name or Phone Number.
+   - **Smart Search**: Live search by Customer Name, Phone Number, or **Garment Type** (Bonus Task).
 3. **Aesthetic UI**:
    - Modern "Glassmorphism" design using Tailwind CSS.
    - Interactive icons using Lucide.
    - Responsive layout with smooth animations.
-4. **Backend Security**:
-   - Basic Authentication implemented for all API endpoints.
-   - H2 In-memory database for rapid testing.
+4. **Backend Security & API**:
+   - Basic Authentication implemented for all API endpoints (Bonus Task).
+   - H2 In-memory database for rapid testing (Bonus Task).
+   - **Interactive API Docs**: Built-in Swagger UI available at `/swagger-ui/index.html`.
 
 ## 🤖 AI Usage Report
 
@@ -52,6 +53,7 @@ LuxeLaundry is a lightweight, aesthetic, and functional Order Management System 
 - *"Create a Spring Boot project with JPA, Security, and H2 for a Laundry management system."*
 - *"Implement a Service layer that calculates total bill and generates unique IDs like ORD-123456."*
 - *"Design a cool, aesthetic frontend using Tailwind CSS with a dashboard and a sidebar."*
+- *"Update the JPA repository to allow searching orders by garment names inside the items list."*
 
 ### What AI Got Wrong & Improvements (Post-Audit)
 - **Nested Validation Bug**: AI initially skipped `@Valid` on the garment items list in `OrderRequest`. I manually added this to ensure quantities and prices are validated.
@@ -59,8 +61,9 @@ LuxeLaundry is a lightweight, aesthetic, and functional Order Management System 
 - **Security Hardcoding**: AI hardcoded admin credentials in the security config. I moved these to `application.properties` with `@Value` injection for better environment management.
 - **Business Logic Edge Cases**: AI didn't handle negative discount percentages. I added clamping logic (`Math.max(0, ...)` and `Math.min(100, ...)`) to protect revenue.
 - **Security Frames**: H2 Console was blocked by Spring Security frame options. I manually added `headers.frameOptions().disable()` to the security config.
+- **Port Conflicts**: Initial AI config used port 8081, but I standardized it to 8080 to match Docker and standard Spring Boot conventions.
 
-## ⚖️ Tradeoffs & Future Improvements
+## 🔹 Tradeoffs
 
 ### Tradeoffs
 - **In-Memory Storage**: Used H2 in-memory for ease of demonstration. A production app would use PostgreSQL or MySQL.
@@ -68,10 +71,10 @@ LuxeLaundry is a lightweight, aesthetic, and functional Order Management System 
 - **Floating Point Math**: Used `Double` for rapid prototyping. In a large-scale financial app, `BigDecimal` would be used to prevent precision loss.
 
 ### Future Improvements
-- **Estimated Delivery Date**: Dynamically calculate based on workload.
 - **Automated Notifications**: Send SMS/WhatsApp notifications to customers when status changes to "READY".
 - **Printable Invoices**: Add a button to generate PDF bills.
 - **Deployment**: Ready for deployment on Railway or Render via Docker.
 
 ---
 *Built with ❤️ by Gemini CLI*
+h ❤️ by Gemini CLI*

@@ -22,7 +22,7 @@ public class ProfileController {
     }
 
     @PostMapping
-    public ResponseEntity<ShopProfileDTO> updateProfile(@RequestBody ShopProfileDTO dto) {
+    public ResponseEntity<ShopProfileDTO> updateProfile(@jakarta.validation.Valid @RequestBody ShopProfileDTO dto) {
         log.info("Updating shop profile settings for: {}", dto.getShopName());
         return ResponseEntity.ok(profileService.saveProfile(dto));
     }

@@ -1,0 +1,135 @@
+{
+    "info": {
+        "name": "LuxeLaundry API",
+        "description": "API Collection for the Mini Laundry Order Management System",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Create Order",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Basic YWRtaW46YWRtaW4="
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"customerName\": \"John Doe\",\n    \"phoneNumber\": \"1234567890\",\n    \"isPriority\": false,\n    \"discountPercentage\": 0,\n    \"items\": [\n        {\n            \"garmentName\": \"Shirt\",\n            \"quantity\": 2,\n            \"pricePerItem\": 150.0,\n            \"category\": \"TOPWEAR\",\n            \"serviceType\": \"WASH_IRON\"\n        },\n        {\n            \"garmentName\": \"Pants\",\n            \"quantity\": 1,\n            \"pricePerItem\": 200.0,\n            \"category\": \"BOTTOMWEAR\",\n            \"serviceType\": \"DRY_CLEANING\"\n        }\n    ]\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8080/api/orders",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "api",
+                        "orders"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "2. Update Order Status",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Basic YWRtaW46YWRtaW4="
+                    }
+                ],
+                "url": {
+                    "raw": "http://localhost:8080/api/orders/ORD-1234/status?status=PROCESSING",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "api",
+                        "orders",
+                        "ORD-1234",
+                        "status"
+                    ],
+                    "query": [
+                        {
+                            "key": "status",
+                            "value": "PROCESSING"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "3. Get All Orders (With Filter)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Basic YWRtaW46YWRtaW4="
+                    }
+                ],
+                "url": {
+                    "raw": "http://localhost:8080/api/orders?status=RECEIVED&query=John",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "api",
+                        "orders"
+                    ],
+                    "query": [
+                        {
+                            "key": "status",
+                            "value": "RECEIVED"
+                        },
+                        {
+                            "key": "query",
+                            "value": "John"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "4. Get Dashboard Stats",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Basic YWRtaW46YWRtaW4="
+                    }
+                ],
+                "url": {
+                    "raw": "http://localhost:8080/api/dashboard",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "api",
+                        "dashboard"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}

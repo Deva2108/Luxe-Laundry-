@@ -147,9 +147,9 @@ public class LaundryService {
     public List<OrderResponse> getAllOrders(String query, OrderStatus status) {
         List<LaundryOrder> orders;
         if (status != null) {
-            orders = orderRepository.findByStatus(status);
+            orders = orderRepository.findByStatusWithItems(status);
         } else if (query != null && !query.isEmpty()) {
-            orders = orderRepository.search(query);
+            orders = orderRepository.searchWithItems(query);
         } else {
             orders = orderRepository.findAllWithItems();
         }
@@ -160,7 +160,7 @@ public class LaundryService {
 
     @Transactional(readOnly = true)
     public DashboardResponse getDashboardData() {
-        List<LaundryOrder> allOrders = orderRepository.findAll();
+        List<LaundryOrder> allOrders = orderRepository.findAllWithItems();
         long totalOrders = allOrders.size();
         long priorityCount = orderRepository.countByIsPriority(true);
         double totalRevenue = allOrders.stream().mapToDouble(LaundryOrder::getFinalBill).sum();
