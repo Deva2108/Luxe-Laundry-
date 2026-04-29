@@ -76,5 +76,5 @@ LuxeLaundry is a lightweight, aesthetic, and functional Order Management System 
 - **Deployment**: Ready for deployment on Railway or Render via Docker.
 
 ---
-*Built with ❤️ by Gemini CLI*
-h ❤️ by Gemini CLI*
+
+
