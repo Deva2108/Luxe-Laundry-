@@ -176,10 +176,13 @@
         <div id="view-orders" class="view hidden space-y-6 animate-slideUp">
             <div class="flex justify-between items-center">
                 <h2 class="text-2xl font-extrabold">Order Repository</h2>
-                <div class="relative">
+                <div class="relative group">
                     <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
                     <input type="text" id="order-search" oninput="debounceSearch()" placeholder="Search by name or ID..." 
-                           class="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 outline-none w-80">
+                           class="pl-10 pr-10 py-2 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 outline-none w-80">
+                    <button onclick="document.getElementById('order-search').value=''; loadOrders();" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 opacity-0 group-focus-within:opacity-100 transition-opacity">
+                        <i data-lucide="x-circle" class="w-4 h-4"></i>
+                    </button>
                 </div>
             </div>
             

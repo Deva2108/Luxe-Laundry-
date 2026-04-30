@@ -119,4 +119,18 @@ class LaundryServiceTest {
         assertEquals(OrderStatus.READY, response.getStatus());
         verify(orderRepository).save(order);
     }
+
+    @Test
+    void deleteOrder_ShouldCallRepositoryDelete() {
+        // Arrange
+        String orderId = "ORD-123";
+        LaundryOrder order = new LaundryOrder();
+        when(orderRepository.findByOrderId(orderId)).thenReturn(Optional.of(order));
+
+        // Act
+        laundryService.deleteOrder(orderId);
+
+        // Assert
+        verify(orderRepository).delete(order);
+    }
 }

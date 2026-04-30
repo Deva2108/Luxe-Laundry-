@@ -70,6 +70,13 @@ class LaundryControllerTest {
 
     @Test
     @WithMockUser(username = "admin")
+    void deleteOrder_ShouldReturnOk() throws Exception {
+        mockMvc.perform(delete("/api/orders/ORD-123"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "admin")
     void getDashboard_ShouldReturnDashboardData() throws Exception {
         mockMvc.perform(get("/api/orders/dashboard"))
                 .andExpect(status().isOk());
