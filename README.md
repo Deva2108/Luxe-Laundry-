@@ -51,12 +51,17 @@ LuxeLaundry is a lightweight, aesthetic, and functional Order Management System 
 - **Gemini CLI (Primary)**: Orchestrated the entire stabilization and cleanup phase.
 - **Tailwind CSS / Lucide / Chart.js**: For a professional, logic-driven UI.
 
-### Post-Audit Improvements
-- **Infrastructure Fix**: Resolved deprecated base image issues in Docker by switching to `eclipse-temurin`.
-- **Logic Cleanup**: Purged all 'useless' placeholder data and replaced them with real database-backed metrics.
-- **Dependency Audit**: Fixed missing `spring-security-test` to ensure CI/CD stability.
-- **Workflow Optimization**: Automating the transition from 'Booking' to 'Receipt' for better operational efficiency.
-- **Port Standardization**: Unified local and production port logic using `${PORT:8080}`.
+### Sample Prompts
+- *"Initialize a Spring Boot project with Data JPA, Security, and H2 for a laundry management system."*
+- *"Create a dashboard UI with Glassmorphism effects and Chart.js integration for revenue tracking."*
+- *"Refactor the order service to handle priority surcharges and discount logic automatically."*
+- *"Audit the codebase for missing test dependencies and fix Docker image deprecation warnings."*
+
+### What AI Got Wrong & Improvements
+- **Docker Image**: Initially suggested a deprecated OpenJDK image; I manually updated it to `eclipse-temurin` for better security and stability.
+- **Port Binding**: AI hardcoded port 8080; I modified it to use `${PORT:8080}` to ensure compatibility with cloud platforms like Render.
+- **Test Scope**: The initial scaffold missed `spring-security-test`, causing test failures; I identified and added the missing dependency.
+- **Data Integrity**: AI used placeholder metrics in the dashboard; I refactored the backend to provide real-time JPA-backed aggregates.
 
 
 ## 🔹 Tradeoffs
