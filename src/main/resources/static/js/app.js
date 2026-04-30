@@ -7,6 +7,7 @@ let currentOrderId = null;
 let garmentLibrary = [];
 let shopProfile = { shopName: 'LuxeLaundry', currencySymbol: '₹', taxPercentage: 0 };
 let revenueChart = null;
+let serviceChart = null;
 
 const CATEGORIES = ['TOPWEAR', 'BOTTOMWEAR', 'BEDDING', 'DELICATES', 'ETHNIC', 'OTHERS'];
 const SERVICES = ['WASH_FOLD', 'WASH_IRON', 'DRY_CLEANING'];
@@ -317,9 +318,10 @@ async function loadDashboard() {
         if (proc) proc.textContent = data.ordersByStatus.PROCESSING || 0;
         
         const prio = document.getElementById('stat-priority');
-        if (prio) prio.textContent = data.totalPriorityOrders;
+        prio.textContent = data.totalPriorityOrders;
 
         renderRevenueChart(data.revenueByCategory);
+        renderServiceChart(data.revenueByService);
 
         const custContainer = document.getElementById('top-customers-list');
         if (custContainer) {
@@ -382,6 +384,33 @@ function renderRevenueChart(data) {
     });
 }
 
+function renderServiceChart(data) {
+    const canvas = document.getElementById('serviceChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (serviceChart) serviceChart.destroy();
+    
+    serviceChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(data).map(s => s.replace('_', ' ')),
+            datasets: [{
+                data: Object.values(data),
+                backgroundColor: ['#6366f1', '#a855f7', '#ec4899'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 10, weight: 'bold' }, padding: 20 } }
+            },
+            cutout: '70%'
+        }
+    });
+}
+
 async function loadOrders(query = '') {
     try {
         const orders = await apiFetch(`/orders${query ? `?query=${query}` : ''}`);
@@ -395,12 +424,24 @@ async function loadOrders(query = '') {
                     <td class="p-6"><span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold">${order.status}</span></td>
                     <td class="p-6"><span class="px-3 py-1 ${order.paymentStatus === 'PAID' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} rounded-lg text-[10px] font-bold">${order.paymentStatus}</span></td>
                     <td class="p-6 text-right font-black text-slate-900">${sym}${order.finalBill.toFixed(2)}</td>
-                    <td class="p-6 text-center"><button onclick="openOrderDetails('${order.orderId}')" class="p-2 hover:bg-blue-50 rounded-lg text-blue-600"><i data-lucide="external-link" class="w-4 h-4"></i></button></td>
+                    <td class="p-6 text-center flex items-center justify-center gap-2">
+                        <button onclick="openOrderDetails('${order.orderId}')" class="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors"><i data-lucide="external-link" class="w-4 h-4"></i></button>
+                        <button onclick="handleDeleteOrder('${order.orderId}')" class="p-2 hover:bg-rose-50 rounded-lg text-rose-400 hover:text-rose-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
     } catch (e) { console.error(e); }
+}
+
+async function handleDeleteOrder(orderId) {
+    if (!confirm(`Delete order ${orderId}? This cannot be undone.`)) return;
+    try {
+        await apiFetch(`/orders/${orderId}`, { method: 'DELETE' });
+        showToast('Order purged from repository');
+        loadOrders();
+    } catch (e) { showToast(e.message, 'error'); }
 }
 
 function debounceSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => { loadOrders(document.getElementById('order-search').value); }, 300); }

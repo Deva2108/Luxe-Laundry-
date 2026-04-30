@@ -46,6 +46,13 @@ public class LaundryController {
         return ResponseEntity.ok(laundryService.getOrderById(orderId));
     }
 
+    @DeleteMapping("/orders/{orderId}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable String orderId) {
+        log.info("Deleting order: {}", orderId);
+        laundryService.deleteOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/orders")
     public ResponseEntity<List<OrderResponse>> getOrders(
             @RequestParam(required = false) String query,

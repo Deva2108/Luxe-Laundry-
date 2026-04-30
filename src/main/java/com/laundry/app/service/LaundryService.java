@@ -68,6 +68,13 @@ public class LaundryService {
     }
 
     @Transactional
+    public void deleteOrder(String orderId) {
+        LaundryOrder order = orderRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new NoSuchElementException("Order not found with ID: " + orderId));
+        orderRepository.delete(order);
+    }
+
+    @Transactional
     public OrderResponse createOrder(OrderRequest request) {
         Double taxPct = profileRepository.findById(1L)
                 .map(ShopProfile::getTaxPercentage).orElse(0.0);
