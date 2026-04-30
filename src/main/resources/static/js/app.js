@@ -444,7 +444,12 @@ function renderServiceChart(data) {
 
 async function loadOrders(query = '') {
     try {
-        const orders = await apiFetch(`/orders${query ? `?query=${query}` : ''}`);
+        const status = document.getElementById('order-status-filter')?.value || '';
+        const params = new URLSearchParams();
+        if (query) params.append('query', query);
+        if (status) params.append('status', status);
+        
+        const orders = await apiFetch(`/orders?${params.toString()}`);
         const sym = shopProfile.currencySymbol || '₹';
         const table = document.getElementById('all-orders-table');
         if (table) {
@@ -454,7 +459,7 @@ async function loadOrders(query = '') {
                     <td class="p-6"><p class="font-bold text-slate-800">${order.customerName}</p><p class="text-xs text-slate-400">${order.phoneNumber}</p></td>
                     <td class="p-6">${getStatusBadge(order.status)}</td>
                     <td class="p-6"><span class="px-3 py-1 ${order.paymentStatus === 'PAID' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} rounded-lg text-[10px] font-bold">${order.paymentStatus}</span></td>
-                    <td class="p-6 text-right font-black text-slate-900">${sym}${order.finalBill.toFixed(2)}</td>
+                    <td class="p-6 text-right font-black text-slate-900">${sym}${order.finalBill.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                     <td class="p-6 text-center flex items-center justify-center gap-2">
                         <button onclick="openOrderDetails('${order.orderId}')" class="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors"><i data-lucide="external-link" class="w-4 h-4"></i></button>
                         <button onclick="handleDeleteOrder('${order.orderId}')" class="p-2 hover:bg-rose-50 rounded-lg text-rose-400 hover:text-rose-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
