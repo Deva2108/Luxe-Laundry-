@@ -176,20 +176,18 @@ public class LaundryService {
         for (OrderStatus status : OrderStatus.values()) {
             statusCounts.put(status, allOrders.stream().filter(o -> o.getStatus() == status).count());
         }
+Map<GarmentCategory, Double> revenueByCategory = new EnumMap<>(GarmentCategory.class);
+Map<ServiceType, Double> revenueByService = new EnumMap<>(ServiceType.class);
 
-        Map<GarmentCategory, Double> revenueByCategory = new EnumMap<>(GarmentCategory.class);
-        Map<GarmentCategory, Long> countByCategory = new EnumMap<>(GarmentCategory.class);
-        Map<ServiceType, Double> revenueByService = new EnumMap<>(ServiceType.class);
+for (LaundryOrder order : allOrders) {
+    for (OrderItem item : order.getItems()) {
+        double itemRevenue = item.getPricePerItem() * item.getQuantity();
+        revenueByCategory.merge(item.getCategory(), itemRevenue, Double::sum);
+        revenueByService.merge(item.getServiceType(), itemRevenue, Double::sum);
+    }
+}
 
-        for (LaundryOrder order : allOrders) {
-            for (OrderItem item : order.getItems()) {
-                double itemRevenue = item.getPricePerItem() * item.getQuantity();
-                revenueByCategory.merge(item.getCategory(), itemRevenue, Double::sum);
-                revenueByService.merge(item.getServiceType(), itemRevenue, Double::sum);
-            }
-        }
-
-        Map<String, CustomerStats> customerMap = new HashMap<>();
+Map<String, CustomerStats> customerMap = new HashMap<>();
         for (LaundryOrder order : allOrders) {
             String key = order.getPhoneNumber();
             CustomerStats stats = customerMap.getOrDefault(key, CustomerStats.builder()

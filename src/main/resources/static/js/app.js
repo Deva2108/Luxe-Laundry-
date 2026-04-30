@@ -222,13 +222,14 @@ async function handleCreateOrder(e) {
         items: items
     };
     try {
-        await apiFetch('/orders', { method: 'POST', body: JSON.stringify(payload) });
+        const response = await apiFetch('/orders', { method: 'POST', body: JSON.stringify(payload) });
         showToast('Booking Successful!');
         e.target.reset();
         document.getElementById('items-container').innerHTML = '';
         addItemRow();
         updateLiveBill();
-        showView('dashboard');
+        if (response.orderId) openOrderDetails(response.orderId);
+        else showView('dashboard');
     } catch (e) { showToast(e.message, 'error'); }
 }
 
@@ -329,7 +330,7 @@ async function loadDashboard() {
         if (totOrders) totOrders.textContent = data.totalOrders;
         
         const totRev = document.getElementById('stat-total-revenue');
-        if (totRev) totRev.textContent = `${sym}${data.totalRevenue.toLocaleString()}`;
+        if (totRev) totRev.textContent = `${sym}${data.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         
         const proc = document.getElementById('stat-processing');
         if (proc) proc.textContent = data.ordersByStatus.PROCESSING || 0;
@@ -348,7 +349,7 @@ async function loadDashboard() {
                         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center font-bold text-blue-600 shadow-sm border border-slate-100">${c.customerName[0]}</div>
                         <div><p class="font-bold text-slate-800 text-sm">${c.customerName}</p><p class="text-[10px] font-bold text-slate-400">${c.totalOrders} Bookings</p></div>
                     </div>
-                    <p class="font-black text-slate-900 text-sm">${sym}${c.totalSpent.toLocaleString()}</p>
+                    <p class="font-black text-slate-900 text-sm">${sym}${c.totalSpent.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                 </div>
             `).join('') : '<p class="text-center text-slate-400 py-10">No customer data yet.</p>';
         }
@@ -364,7 +365,7 @@ async function loadDashboard() {
                         <p class="text-[10px] text-slate-400">#${order.orderId}</p>
                     </td>
                     <td class="px-6 py-5 text-xs font-medium text-slate-500">${order.items.length} items</td>
-                    <td class="px-6 py-5 text-right font-black text-slate-900">${sym}${order.finalBill.toFixed(2)}</td>
+                    <td class="px-6 py-5 text-right font-black text-slate-900">${sym}${order.finalBill.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                 </tr>
             `).join('');
         }
@@ -457,7 +458,7 @@ async function handleDeleteOrder(orderId) {
     try {
         await apiFetch(`/orders/${orderId}`, { method: 'DELETE' });
         showToast('Order purged from repository');
-        loadOrders();
+        refreshViews();
     } catch (e) { showToast(e.message, 'error'); }
 }
 

@@ -31,9 +31,9 @@ public class ProfileController {
     public ResponseEntity<com.laundry.app.dto.AdminInfoDTO> getAdminInfo() {
         return ResponseEntity.ok(com.laundry.app.dto.AdminInfoDTO.builder()
                 .username("admin")
-                .role("ADMIN_OPERATOR")
-                .lastLogin(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
-                .systemStatus("OPERATIONAL")
+                .role("SYSTEM_ADMIN")
+                .lastLogin(java.time.LocalDateTime.now().minusMinutes(2).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                .systemStatus("HEALTHY")
                 .build());
     }
 }
