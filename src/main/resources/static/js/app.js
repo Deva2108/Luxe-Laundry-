@@ -80,6 +80,8 @@ async function loadProfile() {
         const adminData = await apiFetch('/profile/admin/info');
         if (document.getElementById('admin-user-display')) {
             document.getElementById('admin-user-display').textContent = `${adminData.username} (${adminData.role})`;
+            document.getElementById('admin-last-login').textContent = adminData.lastLogin;
+            document.getElementById('admin-system-status').textContent = adminData.systemStatus;
         }
         updateLiveBill();
     } catch (e) { console.error("Profile load failed", e); }
@@ -303,6 +305,18 @@ function showView(viewName) {
     if (viewName === 'profile') loadProfile();
 }
 
+const STATUS_COLORS = {
+    'RECEIVED': 'bg-blue-50 text-blue-600',
+    'PROCESSING': 'bg-amber-50 text-amber-600',
+    'READY': 'bg-emerald-50 text-emerald-600',
+    'DELIVERED': 'bg-slate-100 text-slate-500'
+};
+
+function getStatusBadge(status) {
+    const colors = STATUS_COLORS[status] || 'bg-slate-50 text-slate-500';
+    return `<span class="px-3 py-1 ${colors} rounded-lg text-[10px] font-bold uppercase">${status}</span>`;
+}
+
 async function loadDashboard() {
     try {
         const data = await apiFetch('/dashboard');
@@ -341,7 +355,7 @@ async function loadDashboard() {
         if (recentTable) {
             recentTable.innerHTML = orders.slice(0, 5).map(order => `
                 <tr class="tr-hover cursor-pointer border-b border-slate-50" onclick="openOrderDetails('${order.orderId}')">
-                    <td class="px-6 py-5"><span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-bold uppercase">${order.status}</span></td>
+                    <td class="px-6 py-5">${getStatusBadge(order.status)}</td>
                     <td class="px-6 py-5">
                         <p class="font-bold text-slate-800 text-sm">${order.customerName}</p>
                         <p class="text-[10px] text-slate-400">#${order.orderId}</p>
@@ -421,7 +435,7 @@ async function loadOrders(query = '') {
                 <tr class="tr-hover border-b border-slate-50">
                     <td class="p-6"><span class="font-black text-blue-600 text-sm">#${order.orderId}</span></td>
                     <td class="p-6"><p class="font-bold text-slate-800">${order.customerName}</p><p class="text-xs text-slate-400">${order.phoneNumber}</p></td>
-                    <td class="p-6"><span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold">${order.status}</span></td>
+                    <td class="p-6">${getStatusBadge(order.status)}</td>
                     <td class="p-6"><span class="px-3 py-1 ${order.paymentStatus === 'PAID' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} rounded-lg text-[10px] font-bold">${order.paymentStatus}</span></td>
                     <td class="p-6 text-right font-black text-slate-900">${sym}${order.finalBill.toFixed(2)}</td>
                     <td class="p-6 text-center flex items-center justify-center gap-2">

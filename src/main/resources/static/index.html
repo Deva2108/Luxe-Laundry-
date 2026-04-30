@@ -27,6 +27,15 @@
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
+
+        /* Print Styling */
+        @media print {
+            body * { visibility: hidden; }
+            #order-modal, #order-modal * { visibility: visible; }
+            #order-modal { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; }
+            button { display: none !important; }
+            select { appearance: none; -webkit-appearance: none; border: none; background: transparent; padding: 0; }
+        }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -279,6 +288,10 @@
                     <div>
                         <p class="text-xs text-slate-400 font-bold uppercase">System Operator</p>
                         <h4 class="text-xl font-bold" id="admin-user-display">---</h4>
+                        <div class="flex gap-4 mt-2">
+                            <p class="text-[10px] text-slate-500 font-medium">Last Login: <span id="admin-last-login">--:--</span></p>
+                            <p class="text-[10px] text-emerald-500 font-medium">Status: <span id="admin-system-status">ACTIVE</span></p>
+                        </div>
                     </div>
                     <button type="submit" class="bg-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-colors">Update Workspace</button>
                 </div>
