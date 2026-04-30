@@ -66,10 +66,18 @@ async function loadProfile() {
         
         const sideAdmin = document.getElementById('sidebar-admin-name');
         const sideInitials = document.querySelector('aside .w-8.h-8');
+        const sideStatus = document.querySelector('aside .text-emerald-500');
         const owner = shopProfile.ownerName || 'Admin';
+        
         if (sideAdmin) sideAdmin.textContent = owner;
         if (sideInitials) sideInitials.textContent = owner.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         
+        const adminData = await apiFetch('/profile/admin/info');
+        if (sideStatus) {
+            sideStatus.textContent = adminData.systemStatus === 'HEALTHY' ? '● Online' : '● ' + adminData.systemStatus;
+            sideStatus.className = `text-[10px] ${adminData.systemStatus === 'HEALTHY' ? 'text-emerald-500' : 'text-amber-500'} font-medium flex items-center gap-1`;
+        }
+
         if (document.getElementById('prof-shop-name')) {
             document.getElementById('prof-shop-name').value = shopProfile.shopName;
             document.getElementById('prof-owner-name').value = shopProfile.ownerName || '';
@@ -80,7 +88,6 @@ async function loadProfile() {
             document.getElementById('prof-tax').value = shopProfile.taxPercentage || 0;
         }
 
-        const adminData = await apiFetch('/profile/admin/info');
         if (document.getElementById('admin-user-display')) {
             document.getElementById('admin-user-display').textContent = `${adminData.username} (${adminData.role})`;
             document.getElementById('admin-last-login').textContent = adminData.lastLogin;
@@ -326,8 +333,8 @@ async function loadDashboard() {
         const data = await apiFetch('/dashboard');
         const sym = shopProfile.currencySymbol || '₹';
         
-        const totOrders = document.getElementById('stat-total-orders');
-        if (totOrders) totOrders.textContent = data.totalOrders;
+        const ready = document.getElementById('stat-ready');
+        if (ready) ready.textContent = data.ordersByStatus.READY || 0;
         
         const totRev = document.getElementById('stat-total-revenue');
         if (totRev) totRev.textContent = `${sym}${data.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
@@ -463,3 +470,42 @@ async function handleDeleteOrder(orderId) {
 }
 
 function debounceSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => { loadOrders(document.getElementById('order-search').value); }, 300); }
+
+async function loadProfile() {
+    try {
+        shopProfile = await apiFetch('/profile');
+        const brand = document.getElementById('brand-name');
+        if (brand) brand.textContent = shopProfile.shopName;
+        
+        const sideAdmin = document.getElementById('sidebar-admin-name');
+        const sideInitials = document.querySelector('aside .w-8.h-8');
+        const sideStatus = document.querySelector('aside .text-emerald-500');
+        const owner = shopProfile.ownerName || 'Admin';
+        
+        if (sideAdmin) sideAdmin.textContent = owner;
+        if (sideInitials) sideInitials.textContent = owner.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        
+        const adminData = await apiFetch('/profile/admin/info');
+        if (sideStatus) {
+            sideStatus.textContent = adminData.systemStatus === 'HEALTHY' ? '● Online' : '● ' + adminData.systemStatus;
+            sideStatus.className = `text-[10px] ${adminData.systemStatus === 'HEALTHY' ? 'text-emerald-500' : 'text-amber-500'} font-medium flex items-center gap-1`;
+        }
+
+        if (document.getElementById('prof-shop-name')) {
+            document.getElementById('prof-shop-name').value = shopProfile.shopName;
+            document.getElementById('prof-owner-name').value = shopProfile.ownerName || '';
+            document.getElementById('prof-email').value = shopProfile.email || '';
+            document.getElementById('prof-phone').value = shopProfile.phoneNumber || '';
+            document.getElementById('prof-address').value = shopProfile.address || '';
+            document.getElementById('prof-currency').innerHTML = ['₹','$', '£', '€'].map(s => `<option value="${s}" ${s === shopProfile.currencySymbol ? 'selected' : ''}>${s}</option>`).join('');
+            document.getElementById('prof-tax').value = shopProfile.taxPercentage || 0;
+        }
+
+        if (document.getElementById('admin-user-display')) {
+            document.getElementById('admin-user-display').textContent = `${adminData.username} (${adminData.role})`;
+            document.getElementById('admin-last-login').textContent = adminData.lastLogin;
+            document.getElementById('admin-system-status').textContent = adminData.systemStatus;
+        }
+        updateLiveBill();
+    } catch (e) { console.error("Profile load failed", e); }
+}
