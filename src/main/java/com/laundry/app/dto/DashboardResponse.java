@@ -17,7 +17,6 @@ public class DashboardResponse {
     private Double totalRevenue;
     private Map<OrderStatus, Long> ordersByStatus;
     private Map<GarmentCategory, Double> revenueByCategory;
-    private Map<GarmentCategory, Double> categoryProfitability;
     private Map<ServiceType, Double> revenueByService;
     private List<CustomerStats> topCustomers;
 }

@@ -65,7 +65,10 @@ async function loadProfile() {
         if (brand) brand.textContent = shopProfile.shopName;
         
         const sideAdmin = document.getElementById('sidebar-admin-name');
-        if (sideAdmin) sideAdmin.textContent = shopProfile.ownerName || 'Admin';
+        const sideInitials = document.querySelector('aside .w-8.h-8');
+        const owner = shopProfile.ownerName || 'Admin';
+        if (sideAdmin) sideAdmin.textContent = owner;
+        if (sideInitials) sideInitials.textContent = owner.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         
         if (document.getElementById('prof-shop-name')) {
             document.getElementById('prof-shop-name').value = shopProfile.shopName;

@@ -185,16 +185,9 @@ public class LaundryService {
             for (OrderItem item : order.getItems()) {
                 double itemRevenue = item.getPricePerItem() * item.getQuantity();
                 revenueByCategory.merge(item.getCategory(), itemRevenue, Double::sum);
-                countByCategory.merge(item.getCategory(), 1L, Long::sum);
                 revenueByService.merge(item.getServiceType(), itemRevenue, Double::sum);
             }
         }
-
-        Map<GarmentCategory, Double> categoryProfitability = new EnumMap<>(GarmentCategory.class);
-        revenueByCategory.forEach((cat, rev) -> {
-            long count = countByCategory.getOrDefault(cat, 0L);
-            categoryProfitability.put(cat, count > 0 ? rev / count : 0.0);
-        });
 
         Map<String, CustomerStats> customerMap = new HashMap<>();
         for (LaundryOrder order : allOrders) {
@@ -221,7 +214,6 @@ public class LaundryService {
                 .totalRevenue(totalRevenue)
                 .ordersByStatus(statusCounts)
                 .revenueByCategory(revenueByCategory)
-                .categoryProfitability(categoryProfitability)
                 .revenueByService(revenueByService)
                 .topCustomers(topCustomers)
                 .build();
