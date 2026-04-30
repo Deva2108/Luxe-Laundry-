@@ -93,7 +93,7 @@ class LaundryServiceTest {
         
         OrderRequest request = new OrderRequest();
         request.setDiscountPercentage(150.0); // Should be clamped to 100
-        request.setItems(List.of(new OrderItemDTO("Shirt", 1, 100.0, GarmentCategory.TOPS, ServiceType.WASH_FOLD)));
+        request.setItems(List.of(new OrderItemDTO("Shirt", 1, 100.0, GarmentCategory.TOPWEAR, ServiceType.WASH_FOLD)));
 
         when(orderRepository.save(any(LaundryOrder.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
