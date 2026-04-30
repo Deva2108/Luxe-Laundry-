@@ -29,7 +29,4 @@ public interface OrderRepository extends JpaRepository<LaundryOrder, Long> {
     List<LaundryOrder> searchWithItems(@Param("query") String query);
 
     long countByIsPriority(boolean isPriority);
-
-    @Query("SELECT DISTINCT i.garmentName FROM OrderItem i")
-    List<String> findDistinctGarmentNames();
 }
