@@ -251,10 +251,16 @@ async function openOrderDetails(orderId) {
         const totalContainer = document.getElementById('modal-total');
         if (totalContainer) {
             totalContainer.innerHTML = `
-                <div class="space-y-2">
-                    <div class="flex justify-between text-xs font-medium text-slate-400"><span>Original Total</span><span>${sym}${order.totalBill.toFixed(2)}</span></div>
-                    <div class="flex justify-between text-xs font-bold text-rose-500"><span>Discount Applied</span><span>-${sym}${order.discountAmount.toFixed(2)}</span></div>
-                    <div class="flex justify-between text-xl font-black text-slate-900 pt-2 border-t border-slate-50"><span>Payable Amount</span><span class="text-blue-600">${sym}${order.finalBill.toFixed(2)}</span></div>
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                        <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase"><span>Expected Delivery</span><span class="text-slate-900">${order.estimatedDeliveryDate}</span></div>
+                        <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase"><span>Priority Service</span><span class="${order.isPriority ? 'text-rose-600' : 'text-slate-600'}">${order.isPriority ? 'YES (EXPRESS)' : 'STANDARD'}</span></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-medium text-slate-400"><span>Original Total</span><span>${sym}${order.totalBill.toFixed(2)}</span></div>
+                        <div class="flex justify-between text-xs font-bold text-rose-500"><span>Discount Applied</span><span>-${sym}${order.discountAmount.toFixed(2)}</span></div>
+                        <div class="flex justify-between text-xl font-black text-slate-900 pt-2 border-t border-slate-50"><span>Payable Amount</span><span class="text-blue-600">${sym}${order.finalBill.toFixed(2)}</span></div>
+                    </div>
                 </div>
             `;
         }

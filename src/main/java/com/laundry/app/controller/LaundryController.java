@@ -65,11 +65,6 @@ public class LaundryController {
         return ResponseEntity.ok(laundryService.getDashboardData());
     }
 
-    @GetMapping("/garments/autocomplete")
-    public ResponseEntity<List<String>> getGarmentAutocomplete() {
-        return ResponseEntity.ok(laundryService.getUniqueGarments());
-    }
-
     @GetMapping("/garments/library")
     public ResponseEntity<List<GarmentSettingDTO>> getGarmentLibrary() {
         return ResponseEntity.ok(laundryService.getGarmentLibrary());

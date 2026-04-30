@@ -57,11 +57,6 @@ public class LaundryService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
-    public List<String> getUniqueGarments() {
-        return orderRepository.findDistinctGarmentNames();
-    }
-
     @Transactional
     public void deleteGarmentSetting(Long id) {
         garmentSettingRepository.deleteById(id);
