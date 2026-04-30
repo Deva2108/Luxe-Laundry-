@@ -78,7 +78,7 @@ class LaundryControllerTest {
     @Test
     @WithMockUser(username = "admin")
     void getDashboard_ShouldReturnDashboardData() throws Exception {
-        mockMvc.perform(get("/api/orders/dashboard"))
+        mockMvc.perform(get("/api/dashboard"))
                 .andExpect(status().isOk());
     }
 }
